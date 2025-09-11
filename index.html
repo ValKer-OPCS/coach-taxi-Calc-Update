@@ -160,14 +160,14 @@
       }
 
       if (nb === 2) {
-        prix *= 0.77;
-        detail += `<li>Réduction (2 passagers) : -23%</li>`;
+        prix *= 0.83;
+        detail += `<li>Réduction (2 passagers) : -17%</li>`;
       } else if (nb === 3) {
-        prix *= 0.65;
-        detail += `<li>Réduction (3 passagers) : -35%</li>`;
+        prix *= 0.70;
+        detail += `<li>Réduction (3 passagers) : -30%</li>`;
       } else if (nb >= 4) {
-        prix *= 0.63;
-        detail += `<li>Réduction (4 ou +) : -37%</li>`;
+        prix *= 0.65;
+        detail += `<li>Réduction (4 ou +) : -35%</li>`;
       }
 
       prix = Math.round(prix * 100) / 100;
