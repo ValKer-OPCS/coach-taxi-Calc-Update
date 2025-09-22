@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulateur Taxi Conventionné - Future Convention 2025-2029</title>
   <style>
     body {
@@ -12,9 +13,11 @@
       background: #f8f9fa;
       padding: 20px;
     }
+
     h1 {
       text-align: center;
     }
+
     .passager {
       border: 1px solid #ccc;
       background: #fff;
@@ -22,13 +25,16 @@
       margin-top: 15px;
       border-radius: 6px;
     }
+
     label {
       display: block;
       margin-top: 10px;
     }
+
     input[type="number"] {
       width: 100px;
     }
+
     button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -39,258 +45,334 @@
       border-radius: 4px;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #0056b3;
     }
+
     .result {
       background: #fff;
       padding: 15px;
       margin-top: 30px;
       border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
+
     ul {
       margin-top: 10px;
       padding-left: 20px;
     }
+
     ul li {
       margin-bottom: 6px;
     }
+
     footer {
       font-weight: bold;
       margin-top: 60px;
     }
+
     footer span {
-      color:  red;
+      color: red;
     }
   </style>
 </head>
+
 <body>
 
-<h1>Simulateur Taxi Conventionné - Future Convention 2025-2029 🚕</h1>
+  <h1>Simulateur Taxi Conventionné - Future Convention 2025-2029 🚕</h1>
 
-<label for="departement">Département :</label>
-<select id="departement"></select>
+  <label for="departement">Département :</label>
+  <select id="departement"></select>
 
-<label for="nbPassagers">Nombre de passagers :</label>
-<input type="number" id="nbPassagers" min="1" max="8" value="1" />
+  <label for="nbPassagers">Nombre de passagers :</label>
+  <input type="number" id="nbPassagers" min="1" max="8" value="1" />
 
-<button onclick="genererFormulaires()">Générer les formulaires</button>
+  <button onclick="genererFormulaires()">Générer les formulaires</button>
 
-<div id="formulairesPassagers"></div>
+  <div id="formulairesPassagers"></div>
 
-<button onclick="calculerCourses()">Calculer</button>
+  <button onclick="calculerCourses()">Calculer</button>
 
-<div class="result" id="resultat"></div>
-<footer>Page d'origine par <span>COACH-TAXI</span> - mise a jour par ValKer le 11/09/2025 <br> Mis a jour des remises simultanées 17/30/35 au lieu de 23/35/37 <br>
-Mise a jour des tarifs plancher 1.07€ minimum <br>Ajout du forfait TPMR 22/09/2025 <br>Ajout du nom des départements au lieu du numéro dans le déroulant <br>Ajout d'une vérification si le nombre de passager >8 🚌</footer>
-<script>
-  const tarifsKm = {
-  "Ain": 1.13,
-  "Aisne": 1.20,
-  "Allier": 1.19,
-  "Alpes-de-Haute-Provence": 1.14,
-  "Hautes-Alpes": 1.18,
-  "Alpes-Maritimes": 1.27,
-  "Ardèche": 1.17,
-  "Ardennes": 1.17,
-  "Ariège": 1.15,
-  "Aube": 1.13,
-  "Aude": 1.08,
-  "Aveyron": 1.16,
-  "Bouches-du-Rhône": 1.10,
-  "Calvados": 1.07,
-  "Cantal": 1.13,
-  "Charente": 1.12,
-  "Charente-Maritime": 1.10,
-  "Cher": 1.26,
-  "Corrèze": 1.16,
-  "Côte-d'Or": 1.12,
-  "Côtes-d'Armor": 1.13,
-  "Creuse": 1.18,
-  "Dordogne": 1.11,
-  "Doubs": 1.08,
-  "Drôme": 1.16,
-  "Eure": 1.21,
-  "Eure-et-Loir": 1.19,
-  "Finistère": 1.07,
-  "Corse-du-Sud": 1.27,
-  "Haute-Corse": 1.27,
-  "Gard": 1.08,
-  "Haute-Garonne": 1.10,
-  "Gers": 1.19,
-  "Gironde": 1.07,
-  "Hérault": 1.07,
-  "Ille-et-Vilaine": 1.07,
-  "Indre": 1.25,
-  "Indre-et-Loire": 1.18,
-  "Isère": 1.22,
-  "Jura": 1.11,
-  "Landes": 1.13,
-  "Loir-et-Cher": 1.13,
-  "Loire": 1.08,
-  "Haute-Loire": 1.24,
-  "Loire-Atlantique": 1.08,
-  "Loiret": 1.07,
-  "Lot": 1.13,
-  "Lot-et-Garonne": 1.11,
-  "Lozère": 1.25,
-  "Maine-et-Loire": 1.08,
-  "Manche": 1.16,
-  "Marne": 1.12,
-  "Haute-Marne": 1.26,
-  "Mayenne": 1.09,
-  "Meurthe-et-Moselle": 1.09,
-  "Meuse": 1.12,
-  "Morbihan": 1.07,
-  "Moselle": 1.14,
-  "Nièvre": 1.27,
-  "Nord": 1.20,
-  "Oise": 1.20,
-  "Orne": 1.17,
-  "Pas-de-Calais": 1.20,
-  "Puy-de-Dôme": 1.08,
-  "Pyrénées-Atlantiques": 1.14,
-  "Hautes-Pyrénées": 1.07,
-  "Pyrénées-Orientales": 1.18,
-  "Bas-Rhin": 1.07,
-  "Haut-Rhin": 1.07,
-  "Rhône": 1.07,
-  "Haute-Saône": 1.08,
-  "Saône-et-Loire": 1.10,
-  "Sarthe": 1.07,
-  "Savoie": 1.15,
-  "Haute-Savoie": 1.22,
-  "Paris": 1.22,
-  "Seine-Maritime": 1.18,
-  "Seine-et-Marne": 1.07,
-  "Yvelines": 1.07,
-  "Deux-Sèvres": 1.08,
-  "Somme": 1.15,
-  "Tarn": 1.07,
-  "Tarn-et-Garonne": 1.07,
-  "Var": 1.16,
-  "Vaucluse": 1.20,
-  "Vendée": 1.07,
-  "Vienne": 1.11,
-  "Haute-Vienne": 1.10,
-  "Vosges": 1.10,
-  "Yonne": 1.11,
-  "Territoire de Belfort": 1.08,
-  "Essonne": 1.07,
-  "Hauts-de-Seine": 1.07,
-  "Seine-Saint-Denis": 1.07,
-  "Val-de-Marne": 1.07,
-  "Val-d'Oise": 1.07,
-  "Guadeloupe": 1.07,
-  "Martinique": 1.20,
-  "Guyane": 1.10,
-  "La Réunion": 1.22,
-  "Mayotte": 1.07
-};
+  <div class="result" id="resultat"></div>
+  <footer>Page d'origine par <span>COACH-TAXI</span> - mise a jour par ValKer le 11/09/2025 <br> Mis a jour des remises
+    simultanées 17/30/35 au lieu de 23/35/37 <br>
+    Mise a jour des tarifs plancher 1.07€ minimum <br>Ajout du forfait TPMR 22/09/2025 <br>Ajout du nom des départements
+    au lieu du numéro dans le déroulant <br>Ajout d'une vérification si le nombre de passager >8 🚌 <br> Ajout des kms partagés <br>Ajout du TPMR DROM
+</footer>
+  <script>
+    const tarifsKm = {
+      "Ain": 1.13,
+      "Aisne": 1.20,
+      "Allier": 1.19,
+      "Alpes-de-Haute-Provence": 1.14,
+      "Hautes-Alpes": 1.18,
+      "Alpes-Maritimes": 1.27,
+      "Ardèche": 1.17,
+      "Ardennes": 1.17,
+      "Ariège": 1.15,
+      "Aube": 1.13,
+      "Aude": 1.08,
+      "Aveyron": 1.16,
+      "Bouches-du-Rhône": 1.10,
+      "Calvados": 1.07,
+      "Cantal": 1.13,
+      "Charente": 1.12,
+      "Charente-Maritime": 1.10,
+      "Cher": 1.26,
+      "Corrèze": 1.16,
+      "Côte-d'Or": 1.12,
+      "Côtes-d'Armor": 1.13,
+      "Creuse": 1.18,
+      "Dordogne": 1.11,
+      "Doubs": 1.08,
+      "Drôme": 1.16,
+      "Eure": 1.21,
+      "Eure-et-Loir": 1.19,
+      "Finistère": 1.07,
+      "Corse-du-Sud": 1.27,
+      "Haute-Corse": 1.27,
+      "Gard": 1.08,
+      "Haute-Garonne": 1.10,
+      "Gers": 1.19,
+      "Gironde": 1.07,
+      "Hérault": 1.07,
+      "Ille-et-Vilaine": 1.07,
+      "Indre": 1.25,
+      "Indre-et-Loire": 1.18,
+      "Isère": 1.22,
+      "Jura": 1.11,
+      "Landes": 1.13,
+      "Loir-et-Cher": 1.13,
+      "Loire": 1.08,
+      "Haute-Loire": 1.24,
+      "Loire-Atlantique": 1.08,
+      "Loiret": 1.07,
+      "Lot": 1.13,
+      "Lot-et-Garonne": 1.11,
+      "Lozère": 1.25,
+      "Maine-et-Loire": 1.08,
+      "Manche": 1.16,
+      "Marne": 1.12,
+      "Haute-Marne": 1.26,
+      "Mayenne": 1.09,
+      "Meurthe-et-Moselle": 1.09,
+      "Meuse": 1.12,
+      "Morbihan": 1.07,
+      "Moselle": 1.14,
+      "Nièvre": 1.27,
+      "Nord": 1.20,
+      "Oise": 1.20,
+      "Orne": 1.17,
+      "Pas-de-Calais": 1.20,
+      "Puy-de-Dôme": 1.08,
+      "Pyrénées-Atlantiques": 1.14,
+      "Hautes-Pyrénées": 1.07,
+      "Pyrénées-Orientales": 1.18,
+      "Bas-Rhin": 1.07,
+      "Haut-Rhin": 1.07,
+      "Rhône": 1.07,
+      "Haute-Saône": 1.08,
+      "Saône-et-Loire": 1.10,
+      "Sarthe": 1.07,
+      "Savoie": 1.15,
+      "Haute-Savoie": 1.22,
+      "Paris": 1.22,
+      "Seine-Maritime": 1.18,
+      "Seine-et-Marne": 1.07,
+      "Yvelines": 1.07,
+      "Deux-Sèvres": 1.08,
+      "Somme": 1.15,
+      "Tarn": 1.07,
+      "Tarn-et-Garonne": 1.07,
+      "Var": 1.16,
+      "Vaucluse": 1.20,
+      "Vendée": 1.07,
+      "Vienne": 1.11,
+      "Haute-Vienne": 1.10,
+      "Vosges": 1.10,
+      "Yonne": 1.11,
+      "Territoire de Belfort": 1.08,
+      "Essonne": 1.07,
+      "Hauts-de-Seine": 1.07,
+      "Seine-Saint-Denis": 1.07,
+      "Val-de-Marne": 1.07,
+      "Val-d'Oise": 1.07,
+      "Guadeloupe": 1.07,
+      "Martinique": 1.20,
+      "Guyane": 1.10,
+      "La Réunion": 1.22,
+      "Mayotte": 1.07
+    };
 
 
-  const select = document.getElementById("departement");
-  for (const code in tarifsKm) {
-    const option = document.createElement("option");
-    option.value = code;
-    option.text = `${code}`;
-    select.appendChild(option);
-  }
+    const select = document.getElementById("departement");
+    for (const code in tarifsKm) {
+      const option = document.createElement("option");
+      option.value = code;
+      option.text = `${code}`;
+      select.appendChild(option);
+    }
 
-  function genererFormulaires() {
-    const nb = parseInt(document.getElementById("nbPassagers").value);
-    const container = document.getElementById("formulairesPassagers");
-    if (nb > 8){alert(`Vous ne pouvez pas transporter plus de 8 passagers 🚌`);
+    function genererFormulaires() {
+      const nb = parseInt(document.getElementById("nbPassagers").value);
+      const container = document.getElementById("formulairesPassagers");
+      const dept = document.getElementById("departement").value;
+      const drom = ["Guadeloupe", "Martinique", "Guyane", "La Réunion", "Mayotte"];
+      const texteTpmr = drom.includes(dept)
+        ? "Forfait TPMR (+33 €)"
+        : "Forfait TPMR (+30 €)";
+
+      if (nb > 8) {
+        alert("Vous ne pouvez pas transporter plus de 8 passagers 🚌");
         return;
+      }
+
       
-    }
-    container.innerHTML = "";
-    for (let i = 1; i <= nb; i++) {
-      container.innerHTML += `
-        <div class="passager" id="passager${i}">
-          <h3>Passager ${i}</h3>
-          <label>Distance (en km) :</label>
-          <input type="number" id="distance${i}" min="0" step="1" required />
-          <label><input type="checkbox" id="nuit${i}" /> Nuit / Week-end / Férié</label>
-          <label><input type="checkbox" id="retour${i}" /> Retour à vide (hospitalisation)</label>
-          <label><input type="checkbox" id="aire${i}" /> Forfait aire métropolitaine (+15 €)</label>
-          <label><input type="checkbox" id="tpmr${i}" /> Forfait TPMR (+30 €)</label>
-        </div>
-      `;
-    }
-  }
+      container.textContent = "";
 
-  function calculerCourses() {
-    const nb = parseInt(document.getElementById("nbPassagers").value);
-    const dept = document.getElementById("departement").value;
-    const tarifKm = tarifsKm[dept] || 1.00;
-    let total = 0;
-    let resultHTML = `<h2>Résultat</h2><ul>`;
+      for (let i = 1; i <= nb; i++) {
+        const passager = document.createElement("div");
+        passager.className = "passager";
+        passager.id = `passager${i}`;
 
-    for (let i = 1; i <= nb; i++) {
-      const distance = parseInt(document.getElementById(`distance${i}`).value);
-      const estNuit = document.getElementById(`nuit${i}`).checked;
-      const retourVide = document.getElementById(`retour${i}`).checked;
-      const aire = document.getElementById(`aire${i}`).checked;
-      const tpmr = document.getElementById(`tpmr${i}`).checked;
+        const titre = document.createElement("h3");
+        titre.textContent = `Passager ${i}`;
+        passager.appendChild(titre);
 
-      if (isNaN(distance)) {
-        alert(`Veuillez saisir une distance valide pour le passager ${i}`);
-        return;
+        
+        const label1 = document.createElement("label");
+        label1.textContent = "Distance (en km) :";
+        const input1 = document.createElement("input");
+        input1.type = "number";
+        input1.id = `distance${i}`;
+        input1.min = 0;
+        input1.step = 1;
+        input1.required = true;
+        passager.appendChild(label1);
+        passager.appendChild(input1);
+
+        if (nb >= 2) {
+          const label2 = document.createElement("label");
+          label2.textContent = "Distance partagée (en km)";
+          const input2 = document.createElement("input");
+          input2.type = "number";
+          input2.id = `kmspartage${i}`;
+          input2.min = 0;
+          input2.step = 1;
+          input2.required = true;
+          passager.appendChild(label2);
+          passager.appendChild(input2);
+        }
+
+       
+        const checkboxes = [
+          { id: "nuit", texte: "Nuit / Week-end / Férié" },
+          { id: "retour", texte: "Retour à vide (hospitalisation)" },
+          { id: "aire", texte: "Forfait aire métropolitaine (+15 €)" },
+          { id: "tpmr", texte: texteTpmr }
+        ];
+
+        checkboxes.forEach(cb => {
+          const label = document.createElement("label");
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.id = `${cb.id}${i}`;
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(" " + cb.texte));
+          passager.appendChild(label);
+        });
+
+        container.appendChild(passager);
       }
-
-      let detail = `<strong>Passager ${i}</strong><ul>`;
-      let prix = 13;
-      detail += `<li>Forfait : 13 € (inclut les 4 premiers km)</li>`;
-
-      if (aire) {
-        prix += 15;
-        detail += `<li>Forfait aire métropolitaine : 15 €</li>`;
-      }
-
-      const kmFactures = Math.max(0, distance - 4);
-      const coutDistance = kmFactures * tarifKm;
-      prix += coutDistance;
-      detail += `<li>Kilométrage : ${kmFactures} km × ${tarifKm} € = ${coutDistance.toFixed(2)} €</li>`;
-
-      if (estNuit) {
-        prix *= 1.5;
-        detail += `<li>Majoration nuit/week-end : +50%</li>`;
-      } else if (retourVide) {
-        const taux = distance < 50 ? 0.25 : 0.5;
-        const maj = coutDistance * taux;
-        prix += maj;
-        detail += `<li>Majoration retour à vide : +${(taux * 100)}% sur la part km = ${maj.toFixed(2)} €</li>`;
-      }
-
-      if (nb === 2) {
-        prix *= 0.83;
-        detail += `<li>Réduction (2 passagers) : -17%</li>`;
-      } else if (nb === 3) {
-        prix *= 0.70;
-        detail += `<li>Réduction (3 passagers) : -30%</li>`;
-      } else if (nb >= 4) {
-        prix *= 0.65;
-        detail += `<li>Réduction (4 ou +) : -35%</li>`;
-      }
-      if (tpmr){
-        prix += 30;
-        detail += `<li>Majoration TPMR : +30€</li>`;
-      }
-
-
-      prix = Math.round(prix * 100) / 100;
-      total += prix;
-      detail += `<li><strong>Sous-total : ${prix.toFixed(2)} €</strong></li></ul><br>`;
-      resultHTML += `<li>${detail}</li>`;
     }
 
-    total = Math.round(total * 100) / 100;
-    resultHTML += `</ul><h3>Total global : ${total.toFixed(2)} €</h3>`;
-    document.getElementById("resultat").innerHTML = resultHTML;
-  }
-</script>
+
+    function calculerCourses() {
+      const nb = parseInt(document.getElementById("nbPassagers").value);
+      const dept = document.getElementById("departement").value;
+      const tarifKm = tarifsKm[dept] || 1.00;
+      let total = 0;
+      let resultHTML = `<h2>Résultat</h2><ul>`;
+
+
+      for (let i = 1; i <= nb; i++) {
+        const distance = parseInt(document.getElementById(`distance${i}`).value);
+        const estNuit = document.getElementById(`nuit${i}`).checked;
+        const retourVide = document.getElementById(`retour${i}`).checked;
+        const aire = document.getElementById(`aire${i}`).checked;
+        const tpmr = document.getElementById(`tpmr${i}`).checked;
+        const kmspartageInput = document.getElementById(`kmspartage${i}`);
+        const kmspartage = kmspartageInput ? parseInt(kmspartageInput.value) || 0 : 0;
+
+        if (isNaN(distance)) {
+          alert(`Veuillez saisir une distance valide pour le passager ${i}`);
+          return;
+        }
+
+        let detail = `<strong>Passager ${i}</strong><ul>`;
+        let prix = 13;
+        detail += `<li>Forfait : 13 € (inclut les 4 premiers km)</li>`;
+
+        if (aire) {
+          prix += 15;
+          detail += `<li>Forfait aire métropolitaine : 15 €</li>`;
+        }
+
+        const kmFactures = Math.max(0, distance - 4);
+        const coutDistance = kmFactures * tarifKm;
+        prix += coutDistance;
+        detail += `<li>Kilométrage : ${kmFactures} km × ${tarifKm} € = ${coutDistance.toFixed(2)} €</li>`;
+
+        if (estNuit) {
+          prix *= 1.5;
+          detail += `<li>Majoration nuit/week-end : +50%</li>`;
+        } else if (retourVide) {
+          const taux = distance < 50 ? 0.25 : 0.5;
+          const maj = coutDistance * taux;
+          prix += maj;
+          detail += `<li>Majoration retour à vide : +${(taux * 100)}% sur la part km = ${maj.toFixed(2)} €</li>`;
+        }
+
+        if (nb >= 2) {
+          if (distance - kmspartage > 30) {
+            prix *= 0.95;
+            detail += `<li>Réduction minorée : -5% (+ de 30kms seul)</li>`;
+          } else if (nb === 2) {
+            prix *= 0.83;
+            detail += `<li>Réduction (2 passagers) : -17%</li>`;
+          } else if (nb === 3) {
+            prix *= 0.70;
+            detail += `<li>Réduction (3 passagers) : -30%</li>`;
+          } else if (nb >= 4) {
+            prix *= 0.65;
+            detail += `<li>Réduction (4 ou +) : -35%</li>`;
+          }
+        }
+        if (tpmr) {
+          const drom = ["Guadeloupe", "Martinique", "Guyane", "La Réunion", "Mayotte"];
+          if (drom.includes(dept)) {
+            prix += 33;
+            detail += `<li>Majoration TPMR (DROM) : +33€</li>`;
+          } else {
+            prix += 30;
+            detail += `<li>Majoration TPMR : +30€</li>`;
+          }
+        }
+
+
+        prix = Math.round(prix * 100) / 100;
+        total += prix;
+        detail += `<li><strong>Sous-total : ${prix.toFixed(2)} €</strong></li></ul><br>`;
+        resultHTML += `<li>${detail}</li>`;
+      }
+
+      total = Math.round(total * 100) / 100;
+      resultHTML += `</ul><h3>Total global : ${total.toFixed(2)} €</h3>`;
+      document.getElementById("resultat").innerHTML = resultHTML;
+    }
+  </script>
 
 </body>
+
 </html>
