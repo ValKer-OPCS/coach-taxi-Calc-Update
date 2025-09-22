@@ -83,7 +83,7 @@
 
 <div class="result" id="resultat"></div>
 <footer>Page d'origine par <span>COACH-TAXI</span> - mise a jour par ValKer le 11/09/2025 <br> Mis a jour des remises simultanées 17/30/35 au lieu de 23/35/37 <br>
-Mise a jour des tarifs plancher 1.07€ minimum</footer>
+Mise a jour des tarifs plancher 1.07€ minimum <br>Ajout du forfait TPMR 22/09/2025 <br>Ajout du nom des départements au lieu du numéro dans le déroulant <br>Ajout d'une vérification si le nombre de passager >8 🚌</footer>
 <script>
   const tarifsKm = {
   "Ain": 1.13,
@@ -201,6 +201,10 @@ Mise a jour des tarifs plancher 1.07€ minimum</footer>
   function genererFormulaires() {
     const nb = parseInt(document.getElementById("nbPassagers").value);
     const container = document.getElementById("formulairesPassagers");
+    if (nb > 8){alert(`Vous ne pouvez pas transporter plus de 8 passagers 🚌`);
+        return;
+      
+    }
     container.innerHTML = "";
     for (let i = 1; i <= nb; i++) {
       container.innerHTML += `
@@ -211,6 +215,7 @@ Mise a jour des tarifs plancher 1.07€ minimum</footer>
           <label><input type="checkbox" id="nuit${i}" /> Nuit / Week-end / Férié</label>
           <label><input type="checkbox" id="retour${i}" /> Retour à vide (hospitalisation)</label>
           <label><input type="checkbox" id="aire${i}" /> Forfait aire métropolitaine (+15 €)</label>
+          <label><input type="checkbox" id="tpmr${i}" /> Forfait TPMR (+30 €)</label>
         </div>
       `;
     }
@@ -228,6 +233,7 @@ Mise a jour des tarifs plancher 1.07€ minimum</footer>
       const estNuit = document.getElementById(`nuit${i}`).checked;
       const retourVide = document.getElementById(`retour${i}`).checked;
       const aire = document.getElementById(`aire${i}`).checked;
+      const tpmr = document.getElementById(`tpmr${i}`).checked;
 
       if (isNaN(distance)) {
         alert(`Veuillez saisir une distance valide pour le passager ${i}`);
@@ -268,6 +274,11 @@ Mise a jour des tarifs plancher 1.07€ minimum</footer>
         prix *= 0.65;
         detail += `<li>Réduction (4 ou +) : -35%</li>`;
       }
+      if (tpmr){
+        prix += 30;
+        detail += `<li>Majoration TPMR : +30€</li>`;
+      }
+
 
       prix = Math.round(prix * 100) / 100;
       total += prix;
