@@ -95,8 +95,7 @@
   <button onclick="calculerCourses()">Calculer</button>
 
   <div class="result" id="resultat"></div>
-  <footer>Page d'origine par <span>COACH-TAXI</span> - mise a jour par ValKer le 11/09/2025 <br> Mis a jour des remises
-    simultanées 17/30/35 au lieu de 23/35/37 <br>
+  <footer>Page d'origine par <span>COACH-TAXI</span> - mise a jour par ValKer le 11/09/2025<br>
     Mise a jour des tarifs plancher 1.07€ minimum <br>Ajout du forfait TPMR 22/09/2025 <br>Ajout du nom des départements
     au lieu du numéro dans le déroulant <br>Ajout d'une vérification si le nombre de passager >8 🚌 <br> Ajout des kms partagés <br>Ajout du TPMR DROM
 </footer>
@@ -339,14 +338,14 @@
             prix *= 0.95;
             detail += `<li>Réduction minorée : -5% (+ de 30kms seul)</li>`;
           } else if (nb === 2) {
-            prix *= 0.83;
-            detail += `<li>Réduction (2 passagers) : -17%</li>`;
+            prix *= 0.77;
+            detail += `<li>Réduction (2 passagers) : -23%</li>`;
           } else if (nb === 3) {
-            prix *= 0.70;
-            detail += `<li>Réduction (3 passagers) : -30%</li>`;
-          } else if (nb >= 4) {
             prix *= 0.65;
-            detail += `<li>Réduction (4 ou +) : -35%</li>`;
+            detail += `<li>Réduction (3 passagers) : -35%</li>`;
+          } else if (nb >= 4) {
+            prix *= 0.63;
+            detail += `<li>Réduction (4 ou +) : -37%</li>`;
           }
         }
         if (tpmr) {
