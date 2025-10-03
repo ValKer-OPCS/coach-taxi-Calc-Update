@@ -326,7 +326,9 @@
         if (estNuit) {
           prix *= 1.5;
           detail += `<li>Majoration nuit/week-end : +50%</li>`;
-        } else if (retourVide) {
+        }
+        
+        if (retourVide) {
           const taux = distance < 50 ? 0.25 : 0.5;
           const maj = coutDistance * taux;
           prix += maj;
